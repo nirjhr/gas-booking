@@ -1,0 +1,119 @@
+body {
+  font-family: "Arial", sans-serif;
+  margin: 0;
+  padding: 0;
+  background-image: url("img.jpg");
+  background-size: cover; /* or 'contain' to fit the image */
+  background-position: center; /* center the image */
+  background-repeat: no-repeat; /* no repeat */
+  color: #fc0a0a;
+}
+
+nav {
+  background-color: #333;
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+
+nav ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+nav ul li {
+  float: left;
+}
+
+nav ul li a {
+  display: block;
+  color: white;
+  text-align: center;
+  padding: 14px 20px;
+  text-decoration: none;
+}
+
+nav ul li a:hover {
+  background-color: #575757;
+}
+
+nav ul li a.active {
+  background-color: #4caf50;
+}
+
+h1,
+h2 {
+  text-align: center;
+}
+
+form {
+  background-color: white;
+  max-width: 500px;
+  margin: 20px auto;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+input[type="text"],
+input[type="submit"] {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+}
+
+input[type="submit"] {
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+input[type="submit"]:hover {
+  background-color: #45a049;
+}
+
+#stateOffices ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+#stateOffices li {
+  background-color: white;
+  margin: 5px 0;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#stateOffices button {
+  background-color: #f44336;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+#stateOffices button:hover {
+  background-color: #e53935;
+}
+
+#stateOffices button.edit {
+  background-color: #2196f3;
+}
+
+#stateOffices button.edit:hover {
+  background-color: #1e88e5;
+}

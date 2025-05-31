@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Gas Booking Management</title>
+    <link rel="stylesheet" type="text/css" href="styles.css" />
+  </head>
+  <body>
+    <nav>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="state_office.html">State Office Management</a></li>
+        <li><a href="area_office.html">Area Office Management</a></li>
+        <li><a href="distributor.html">Distributor Management</a></li>
+        <li><a href="consumer.html">Consumer Management</a></li>
+        <li><a href="gas_booking.html" class="active">Gas Booking</a></li>
+        <li><a href="cylinder_managment.html">cyliner Management</a></li>
+      </ul>
+    </nav>
+
+    <h1>Gas Booking Management</h1>
+
+    <!-- Gas Booking Form -->
+    <form id="addBookingForm">
+      <h2>Book Gas</h2>
+      <label for="consumerID">Consumer ID:</label>
+      <input type="number" id="consumerID" name="consumerID" required /><br />
+      <label for="bookingDate">Booking Date:</label>
+      <input type="date" id="bookingDate" name="bookingDate" required /><br />
+      <label for="deliveryDate">Delivery Date:</label>
+      <input type="date" id="deliveryDate" name="deliveryDate" required /><br />
+      <label for="bookingNumber">Booking Number:</label>
+      <input
+        type="text"
+        id="bookingNumber"
+        name="bookingNumber"
+        required
+      /><br /><br />
+      <input type="submit" value="Book Gas" />
+    </form>
+
+    <!-- View Booking History -->
+    <h2>Booking History</h2>
+    <form id="viewBookingsForm">
+      <label for="consumerIDHistory">Consumer ID:</label>
+      <input
+        type="number"
+        id="consumerIDHistory"
+        name="consumerIDHistory"
+        required
+      /><br /><br />
+      <input type="submit" value="View Booking History" />
+    </form>
+    <div id="bookingHistory"></div>
+
+    <!-- Track Booking Status -->
+    <h2>Track Booking Status</h2>
+    <form id="trackBookingForm">
+      <label for="bookingNumberStatus">Booking Number:</label>
+      <input
+        type="text"
+        id="bookingNumberStatus"
+        name="bookingNumberStatus"
+        required
+      /><br /><br />
+      <input type="submit" value="Track Booking" />
+    </form>
+    <div id="bookingStatus"></div>
+
+    <script>
+      document
+        .getElementById("addBookingForm")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
+          const data = {
+            ConsumerID: document.getElementById("consumerID").value,
+            BookingDate: document.getElementById("bookingDate").value,
+            DeliveryDate: document.getElementById("deliveryDate").value,
+            BookingNumber: document.getElementById("bookingNumber").value,
+          };
+          fetch("/add-booking", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+          })
+            .then((response) => response.text())
+            .then((data) => {
+              alert(data);
+            });
+        });
+
+      document
+        .getElementById("viewBookingsForm")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
+          const consumerID = document.getElementById("consumerIDHistory").value;
+          fetch(`/view-bookings/${consumerID}`)
+            .then((response) => response.json())
+            .then((data) => {
+              let output = "<ul>";
+              data.forEach((booking) => {
+                output += `<li>Booking Number: ${booking.BookingNumber}, Booking Date: ${booking.BookingDate}, Delivery Date: ${booking.DeliveryDate}</li>`;
+              });
+              output += "</ul>";
+              document.getElementById("bookingHistory").innerHTML = output;
+            });
+        });
+
+      document
+        .getElementById("trackBookingForm")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
+          const bookingNumber = document.getElementById(
+            "bookingNumberStatus"
+          ).value;
+          fetch(`/track-booking/${bookingNumber}`)
+            .then((response) => response.json())
+            .then((data) => {
+              const currentDate = new Date();
+              const deliveryDate = new Date(data.DeliveryDate);
+
+              let output = `Booking Number: ${data.BookingNumber}, Booking Date: ${data.BookingDate}, Delivery Date: ${data.DeliveryDate}`;
+
+              if (deliveryDate < currentDate) {
+                output += `<br>Gas delivered on: ${data.DeliveryDate}`;
+              } else {
+                output += `<br>Gas not delivered yet. Expected delivery date is: ${data.DeliveryDate}`;
+              }
+
+              document.getElementById("bookingStatus").innerHTML = output;
+            });
+        });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Consumer Management</title>
+    <link rel="stylesheet" type="text/css" href="styles.css" />
+  </head>
+  <body>
+    <nav>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="state_office.html">State Office Management</a></li>
+        <li><a href="area_office.html">Area Office Management</a></li>
+        <li><a href="distributor.html">Distributor Management</a></li>
+        <li><a href="consumer.html" class="active">Consumer Management</a></li>
+        <li><a href="gas_booking.html">Gas Booking</a></li>
+        <li><a href="cylinder_managment.html">cyliner Management</a></li>
+      </ul>
+    </nav>
+
+    <h1>Consumer Management</h1>
+
+    <!-- Add Consumer Form -->
+    <form id="addConsumerForm">
+      <h2>Add Consumer</h2>
+      <label for="distributorID">Distributor ID:</label>
+      <input
+        type="number"
+        id="distributorID"
+        name="distributorID"
+        required
+      /><br />
+      <label for="consumerName">Consumer Name:</label>
+      <input type="text" id="consumerName" name="consumerName" required /><br />
+      <label for="address">Address:</label>
+      <input type="text" id="address" name="address" required /><br />
+      <label for="pinCode">Pin Code:</label>
+      <input type="text" id="pinCode" name="pinCode" required /><br />
+      <label for="contactNo">Contact No:</label>
+      <input type="text" id="contactNo" name="contactNo" required /><br />
+      <label for="emailID">Email ID:</label>
+      <input type="email" id="emailID" name="emailID" required /><br />
+      <label for="numOfCylinders">Number of Cylinders:</label>
+      <input
+        type="number"
+        id="numOfCylinders"
+        name="numOfCylinders"
+        required
+      /><br />
+      <label for="dateOfConnection">Date of Connection:</label>
+      <input
+        type="date"
+        id="dateOfConnection"
+        name="dateOfConnection"
+        required
+      /><br /><br />
+      <input type="submit" value="Add Consumer" />
+    </form>
+
+    <!-- Issue Subscription Voucher Form -->
+    <form id="issueSVForm">
+      <h2>Issue Subscription Voucher</h2>
+      <label for="consumerID">Consumer ID:</label>
+      <input type="number" id="consumerID" name="consumerID" required /><br />
+      <label for="distributorIDSV">Distributor ID:</label>
+      <input
+        type="number"
+        id="distributorIDSV"
+        name="distributorIDSV"
+        required
+      /><br />
+      <label for="depositAmount">Deposit Amount:</label>
+      <input
+        type="number"
+        step="0.01"
+        id="depositAmount"
+        name="depositAmount"
+        required
+      /><br />
+      <label for="cylinderType">Cylinder Type:</label>
+      <input type="text" id="cylinderType" name="cylinderType" required /><br />
+      <label for="numOfCylindersSV">Number of Cylinders:</label>
+      <input
+        type="number"
+        id="numOfCylindersSV"
+        name="numOfCylindersSV"
+        required
+      /><br />
+      <label for="dateOfConnectionSV">Date of Connection:</label>
+      <input
+        type="date"
+        id="dateOfConnectionSV"
+        name="dateOfConnectionSV"
+        required
+      /><br /><br />
+      <input type="submit" value="Issue Subscription Voucher" />
+    </form>
+
+    <!-- Issue Termination Voucher Form -->
+    <form id="issueTVForm">
+      <h2>Issue Termination Voucher</h2>
+      <label for="consumerIDTV">Consumer ID:</label>
+      <input
+        type="number"
+        id="consumerIDTV"
+        name="consumerIDTV"
+        required
+      /><br />
+      <label for="distributorIDTV">Distributor ID:</label>
+      <input
+        type="number"
+        id="distributorIDTV"
+        name="distributorIDTV"
+        required
+      /><br />
+      <label for="transfereeDistributorID">Transferee Distributor ID:</label>
+      <input
+        type="number"
+        id="transfereeDistributorID"
+        name="transfereeDistributorID"
+        required
+      /><br />
+      <label for="amountPaid">Amount Paid:</label>
+      <input
+        type="number"
+        step="0.01"
+        id="amountPaid"
+        name="amountPaid"
+        required
+      /><br />
+      <label for="tvDate">TV Date:</label>
+      <input type="date" id="tvDate" name="tvDate" required /><br />
+      <label for="svNumber">SV Number:</label>
+      <input type="number" id="svNumber" name="svNumber" required /><br /><br />
+      <input type="submit" value="Issue Termination Voucher" />
+    </form>
+
+    <!-- View Consumers -->
+    <h2>View Consumers</h2>
+    <div id="consumers"></div>
+
+    <script>
+      document
+        .getElementById("addConsumerForm")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
+          const data = {
+            DistributorID: document.getElementById("distributorID").value,
+            ConsumerName: document.getElementById("consumerName").value,
+            Address: document.getElementById("address").value,
+            PinCode: document.getElementById("pinCode").value,
+            ContactNo: document.getElementById("contactNo").value,
+            EmailID: document.getElementById("emailID").value,
+            NumOfCylinders: document.getElementById("numOfCylinders").value,
+            DateOfConnection: document.getElementById("dateOfConnection").value,
+          };
+          fetch("/add-consumer", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+          })
+            .then((response) => response.text())
+            .then((data) => {
+              alert(data);
+              loadConsumers();
+            });
+        });
+
+      document
+        .getElementById("issueSVForm")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
+          const data = {
+            ConsumerID: document.getElementById("consumerID").value,
+            DistributorID: document.getElementById("distributorIDSV").value,
+            DepositAmount: document.getElementById("depositAmount").value,
+            CylinderType: document.getElementById("cylinderType").value,
+            NumOfCylinders: document.getElementById("numOfCylindersSV").value,
+            DateOfConnection:
+              document.getElementById("dateOfConnectionSV").value,
+          };
+          fetch("/issue-sv", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+          })
+            .then((response) => response.text())
+            .then((data) => {
+              alert(data);
+            });
+        });
+
+      document
+        .getElementById("issueTVForm")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
+          const data = {
+            ConsumerID: document.getElementById("consumerIDTV").value,
+            DistributorID: document.getElementById("distributorIDTV").value,
+            TransfereeDistributorID: document.getElementById(
+              "transfereeDistributorID"
+            ).value,
+            AmountPaid: document.getElementById("amountPaid").value,
+            TVDate: document.getElementById("tvDate").value,
+            SVNumber: document.getElementById("svNumber").value,
+          };
+          fetch("/issue-tv", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+          })
+            .then((response) => response.text())
+            .then((data) => {
+              alert(data);
+            });
+        });
+
+      function loadConsumers() {
+        fetch("/view-consumers")
+          .then((response) => response.json())
+          .then((data) => {
+            let output = "<ul>";
+            data.forEach((consumer) => {
+              output += `<li>${consumer.ConsumerName} - ${consumer.Address} (Contact: ${consumer.ContactNo})
+                    <button class="edit" onclick="editConsumer(${consumer.ConsumerID})">Edit</button>
+                    <button onclick="deleteConsumer(${consumer.ConsumerID})">Delete</button></li>`;
+            });
+            output += "</ul>";
+            document.getElementById("consumers").innerHTML = output;
+          });
+      }
+
+      function editConsumer(id) {
+        const newDistributorID = prompt("Enter new distributor ID:");
+        const newName = prompt("Enter new consumer name:");
+        const newAddress = prompt("Enter new address:");
+        const newPinCode = prompt("Enter new pin code:");
+        const newContactNo = prompt("Enter new contact number:");
+        const newEmailID = prompt("Enter new email ID:");
+        const newNumOfCylinders = prompt("Enter new number of cylinders:");
+        const newDateOfConnection = prompt("Enter new date of connection:");
+        if (
+          newDistributorID &&
+          newName &&
+          newAddress &&
+          newPinCode &&
+          newContactNo &&
+          newEmailID &&
+          newNumOfCylinders &&
+          newDateOfConnection
+        ) {
+          fetch(`/edit-consumer/${id}`, {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              DistributorID: newDistributorID,
+              ConsumerName: newName,
+              Address: newAddress,
+              PinCode: newPinCode,
+              ContactNo: newContactNo,
+              EmailID: newEmailID,
+              NumOfCylinders: newNumOfCylinders,
+              DateOfConnection: newDateOfConnection,
+            }),
+          })
+            .then((response) => response.text())
+            .then((data) => {
+              alert(data);
+              loadConsumers();
+            });
+        }
+      }
+
+      function deleteConsumer(id) {
+        if (confirm("Are you sure you want to delete this consumer?")) {
+          fetch(`/delete-consumer/${id}`, {
+            method: "DELETE",
+          })
+            .then((response) => response.text())
+            .then((data) => {
+              alert(data);
+              loadConsumers();
+            });
+        }
+      }
+
+      // Load consumers on page load
+      loadConsumers();
+    </script>
+  </body>
+</html>

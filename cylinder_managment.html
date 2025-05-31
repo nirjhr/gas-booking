@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Cylinder Management</title>
+    <link rel="stylesheet" type="text/css" href="styles.css" />
+  </head>
+  <body>
+    <nav>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="state_office.html">State Office Management</a></li>
+        <li><a href="area_office.html">Area Office Management</a></li>
+        <li><a href="distributor.html">Distributor Management</a></li>
+        <li><a href="consumer.html">Consumer Management</a></li>
+        <li><a href="gas_booking.html">Gas Booking</a></li>
+        <li>
+          <a href="cylinder_management.html" class="active"
+            >Cylinder Management</a
+          >
+        </li>
+      </ul>
+    </nav>
+
+    <h1>Cylinder Management</h1>
+
+    <!-- Add Cylinder Type Form -->
+    <form id="addCylinderForm">
+      <h2>Add Cylinder Type</h2>
+      <label for="type">Cylinder Type:</label>
+      <input type="text" id="type" name="type" required /><br />
+      <label for="price">Price:</label>
+      <input type="number" step="0.01" id="price" name="price" required /><br />
+      <label for="quantity">Quantity:</label>
+      <input type="number" id="quantity" name="quantity" required /><br /><br />
+      <input type="submit" value="Add Cylinder Type" />
+    </form>
+
+    <!-- View Cylinder Types -->
+    <h2>List of Cylinder Types</h2>
+    <div id="cylinderList"></div>
+
+    <!-- Update Stock Registry Form -->
+    <form id="updateStockForm">
+      <h2>Update Stock Registry</h2>
+      <label for="distributorID">Distributor ID:</label>
+      <input
+        type="number"
+        id="distributorID"
+        name="distributorID"
+        required
+      /><br />
+      <label for="cylinderID">Cylinder ID:</label>
+      <input type="number" id="cylinderID" name="cylinderID" required /><br />
+      <label for="quantityStock">Quantity:</label>
+      <input
+        type="number"
+        id="quantityStock"
+        name="quantityStock"
+        required
+      /><br /><br />
+      <input type="submit" value="Update Stock" />
+    </form>
+
+    <script>
+      // Handle Add Cylinder Type Form Submission
+      document
+        .getElementById("addCylinderForm")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
+          const data = {
+            Type: document.getElementById("type").value,
+            Price: document.getElementById("price").value,
+            Quantity: document.getElementById("quantity").value,
+          };
+          fetch("/add-cylinder", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+          })
+            .then((response) => response.text())
+            .then((data) => {
+              alert(data);
+              loadCylinders();
+            });
+        });
+
+      // Load Cylinder Types
+      function loadCylinders() {
+        fetch("/view-cylinders")
+          .then((response) => response.json())
+          .then((data) => {
+            let output = "<ul>";
+            data.forEach((cylinder) => {
+              output += `<li>Type: ${cylinder.Type}, Price: ${cylinder.Price}, Quantity: ${cylinder.Quantity}</li>`;
+            });
+            output += "</ul>";
+            document.getElementById("cylinderList").innerHTML = output;
+          });
+      }
+
+      // Handle Update Stock Form Submission
+      document
+        .getElementById("updateStockForm")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
+          const data = {
+            DistributorID: document.getElementById("distributorID").value,
+            CylinderID: document.getElementById("cylinderID").value,
+            Quantity: document.getElementById("quantityStock").value,
+          };
+          fetch("/update-stock", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+          })
+            .then((response) => response.text())
+            .then((data) => {
+              alert(data);
+            });
+        });
+
+      // Load cylinders on page load
+      loadCylinders();
+    </script>
+  </body>
+</html>
